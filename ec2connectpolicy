@@ -1,0 +1,49 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AdditionalPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeInstanceConnectEndpoints",
+                "ec2-instance-connect:SendSSHPublicKey"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ForLinux",
+            "Effect": "Allow",
+            "Action": "ec2-instance-connect:OpenTunnel",
+            "Resource": "arn:aws:ec2:us-east-1:592681249063:instance-connect-endpoint/eice-01d696f4d67ed9bdd",      //You must change with your endpoint ARN in your VPC console 
+            "Condition": {
+                "NumericEquals": {
+                    "ec2-instance-connect:remotePort": "22"
+                },
+                "IpAddress": {
+                    "ec2-instance-connect:privateIpAddress": "90.90.11.124"   //You must change with your Linux instance private IP
+                },
+                "NumericLessThanEquals": {
+                    "ec2-instance-connect:maxTunnelDuration": "3600"          //You must set with your max tunnel duration
+                }
+            }
+        },
+        {
+            "Sid": "ForWindows",
+            "Effect": "Allow",
+            "Action": "ec2-instance-connect:OpenTunnel",
+            "Resource": "arn:aws:ec2:us-east-1:592681249063:instance-connect-endpoint/eice-01d696f4d67ed9bdd",       //You must change with your endpoint ARN in your VPC console
+            "Condition": {
+                "NumericEquals": {
+                    "ec2-instance-connect:remotePort": "3389"
+                },
+                "IpAddress": {
+                    "ec2-instance-connect:privateIpAddress": "<WINDOWS_INSTANCE_PRIVATE_IP>"     //You must change with your Windows instance private IP
+                },
+                "NumericLessThanEquals": {
+                    "ec2-instance-connect:maxTunnelDuration": "<3600>"     //You must set with your max tunnel duration
+                }
+            }
+        }
+    ]
+}
